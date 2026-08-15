@@ -10,40 +10,45 @@ export function getTelegram() {
 
 export const isInTelegram = () => Boolean(getTelegram()?.initData);
 
-/** Call once, as early as possible (main.tsx). */
+/** Call once, as early as possible (main.tsx). Every bridge call is wrapped
+ *  individually — a Direct Link Mini App (opened via t.me/bot/shortname, as
+ *  opposed to a menu-button/inline-button launch) has a thinner WebApp
+ *  bridge in some Telegram clients, and one unsupported method throwing
+ *  here used to be able to abort the whole script before React ever
+ *  mounted, i.e. a blank/black screen with no error visible to the user. */
 export function bootstrapTelegram() {
   const tg = getTelegram();
   if (!tg) return;
 
-  tg.ready();
-  tg.expand();
-
-  try {
-    tg.requestFullscreen?.();
-  } catch {
-    /* older client, ignore */
-  }
-  try {
-    tg.disableVerticalSwipes?.();
-  } catch {
-    /* older client, ignore */
-  }
-
-  tg.setHeaderColor?.('#0b0a12');
-  tg.setBackgroundColor?.('#0b0a12');
-  tg.setBottomBarColor?.('#0b0a12');
-  tg.enableClosingConfirmation();
-
-  const syncSafeArea = () => {
-    const top = (tg.safeAreaInset?.top ?? 0) + (tg.contentSafeAreaInset?.top ?? 0);
-    const bottom = (tg.safeAreaInset?.bottom ?? 0) + (tg.contentSafeAreaInset?.bottom ?? 0);
-    document.documentElement.style.setProperty('--tg-safe-top', `${top}px`);
-    document.documentElement.style.setProperty('--tg-safe-bottom', `${bottom}px`);
+  const safe = (fn: () => void) => {
+    try {
+      fn();
+    } catch {
+      /* unsupported in this client — app still has to render */
+    }
   };
-  syncSafeArea();
-  tg.onEvent('safeAreaChanged', syncSafeArea);
-  tg.onEvent('contentSafeAreaChanged', syncSafeArea);
-  tg.onEvent('fullscreenChanged', syncSafeArea);
+
+  safe(() => tg.ready());
+  safe(() => tg.expand());
+  safe(() => tg.requestFullscreen?.());
+  safe(() => tg.disableVerticalSwipes?.());
+  safe(() => tg.setHeaderColor?.('#0b0a12'));
+  safe(() => tg.setBackgroundColor?.('#0b0a12'));
+  safe(() => tg.setBottomBarColor?.('#0b0a12'));
+  safe(() => tg.enableClosingConfirmation());
+
+  safe(() => {
+    const syncSafeArea = () => {
+      const top = (tg.safeAreaInset?.top ?? 0) + (tg.contentSafeAreaInset?.top ?? 0);
+      const bottom = (tg.safeAreaInset?.bottom ?? 0) + (tg.contentSafeAreaInset?.bottom ?? 0);
+      document.documentElement.style.setProperty('--tg-safe-top', `${top}px`);
+      document.documentElement.style.setProperty('--tg-safe-bottom', `${bottom}px`);
+    };
+    syncSafeArea();
+    tg.onEvent('safeAreaChanged', syncSafeArea);
+    tg.onEvent('contentSafeAreaChanged', syncSafeArea);
+    tg.onEvent('fullscreenChanged', syncSafeArea);
+  });
 }
 
 export function haptic(style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft' = 'light') {
