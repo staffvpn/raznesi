@@ -50,6 +50,18 @@ html, body, #root {
   height: 100%;
 }
 
+/* Plain `100%`/`100vh` is unreliable in mobile WebViews (Telegram's in-app
+   browser included) — the viewport height can resolve to 0 or the wrong
+   value before the bridge finishes settling, which is what a "just a glow,
+   nothing else" render usually is: #root collapsed to zero height with
+   `overflow: hidden` clipping everything inside it. `100dvh` tracks the
+   real visual viewport instead. */
+@supports (height: 100dvh) {
+  html, body {
+    height: 100dvh;
+  }
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
