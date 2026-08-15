@@ -7,6 +7,7 @@ import { analyzeRoutes } from './routes/analyze';
 import { historyRoutes } from './routes/history';
 import { paymentRoutes } from './routes/payments';
 import { webhookRoutes } from './routes/webhook';
+import { adminRoutes } from './routes/admin';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -16,7 +17,7 @@ app.use('*', async (c, next) => {
   if (c.req.path.startsWith('/telegram/webhook')) return next();
   const middleware = cors({
     origin: [c.env.APP_ORIGIN, 'http://localhost:5173', 'http://localhost:5195'],
-    allowHeaders: ['Content-Type', 'X-Init-Data'],
+    allowHeaders: ['Content-Type', 'X-Init-Data', 'X-Admin-Key'],
     allowMethods: ['GET', 'POST', 'OPTIONS'],
   });
   return middleware(c, next);
@@ -29,6 +30,7 @@ app.route('/analyze', analyzeRoutes);
 app.route('/history', historyRoutes);
 app.route('/payments', paymentRoutes);
 app.route('/telegram/webhook', webhookRoutes);
+app.route('/admin', adminRoutes);
 
 app.onError((err, c) => {
   console.error(err);

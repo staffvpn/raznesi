@@ -39,3 +39,21 @@ export interface HistoryItem {
 export interface HistoryDetail extends HistoryItem {
   result: AnalysisResult;
 }
+
+export interface AdminStats {
+  users: number;
+  analyses: number;
+  proUsers: number;
+  modeBreakdown: { mode: Mode; n: number }[];
+  revenue: { kind: string; n: number; stars: number }[];
+}
+
+export interface AdminAnalysisItem {
+  id: number;
+  ideaText: string;
+  mode: Mode;
+  verdict: string;
+  score: number;
+  createdAt: string;
+  user: { name: string; username: string | null; telegramId: number };
+}

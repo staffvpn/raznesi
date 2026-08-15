@@ -6,6 +6,10 @@ export interface Env {
   /** Optional — without it, generateAnalysis() falls back to a rule-based
    *  generator instead of calling the Claude API. See lib/analysis.ts. */
   ANTHROPIC_API_KEY?: string;
+  /** Optional — without it, every /admin/* route 403s. A plain shared
+   *  password rather than real auth: fine for a single-owner read-only
+   *  dashboard, not meant to scale past that. */
+  ADMIN_KEY?: string;
 }
 
 export type Mode = 'praise' | 'criticize' | 'destroy' | 'monetize';

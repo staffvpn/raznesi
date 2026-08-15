@@ -4,6 +4,7 @@ import { PaywallSheet } from './components/PaywallSheet';
 import { Home } from './screens/Home';
 import { Result, HistoryDetailScreen } from './screens/Result';
 import { History } from './screens/History';
+import { Admin } from './screens/Admin';
 
 export default function App() {
   return (
@@ -15,6 +16,11 @@ export default function App() {
             <Route path="/result" element={<Result />} />
             <Route path="/history" element={<History />} />
             <Route path="/history/:id" element={<HistoryDetailScreen />} />
+
+            {/* Not part of the consumer app — open as a plain URL in a
+                normal browser (never inside Telegram), password-gated on
+                the worker side (ADMIN_KEY). See src/screens/Admin.tsx. */}
+            <Route path="/admin" element={<Admin />} />
 
             {/* Telegram appends its own bridge data to the URL hash on
                 every launch (#tgWebAppData=...&tgWebAppVersion=...) — since
