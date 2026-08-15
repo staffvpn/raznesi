@@ -40,7 +40,8 @@ export interface UserRow {
 }
 
 export interface Entitlement {
-  freeAvailable: boolean;
+  freeRemaining: number;
+  freeTotal: number;
   credits: number;
   isPro: boolean;
   proUntil: string | null;

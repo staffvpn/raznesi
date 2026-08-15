@@ -129,8 +129,12 @@ function EntitlementPill() {
       <p className="text-center text-[12px] font-semibold text-accent">👑 Pro-подписка — безлимит разборов</p>
     );
   }
-  if (entitlement.freeAvailable) {
-    return <p className="text-center text-[12px] font-semibold text-text-muted">🎁 Первый разбор — бесплатно</p>;
+  if (entitlement.freeRemaining > 0) {
+    return (
+      <p className="text-center text-[12px] font-semibold text-text-muted">
+        🎁 Бесплатных разборов: {entitlement.freeRemaining} из {entitlement.freeTotal}
+      </p>
+    );
   }
   if (entitlement.credits > 0) {
     return (

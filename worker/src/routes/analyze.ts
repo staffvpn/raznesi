@@ -27,8 +27,8 @@ analyzeRoutes.post('/', requireTelegramUser, async (c) => {
   // LLM call (or fallback throwing, which it doesn't, but belt & braces)
   // must never burn a free credit the user didn't get value from.
   if (!entitlement.isPro) {
-    if (entitlement.freeAvailable) {
-      await c.env.DB.prepare('UPDATE users SET free_used = 1 WHERE id = ?').bind(user.id).run();
+    if (entitlement.freeRemaining > 0) {
+      await c.env.DB.prepare('UPDATE users SET free_used = free_used + 1 WHERE id = ?').bind(user.id).run();
     } else {
       await c.env.DB.prepare('UPDATE users SET credits = credits - 1 WHERE id = ? AND credits > 0').bind(user.id).run();
     }
