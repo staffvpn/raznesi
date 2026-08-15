@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 # CORS origin the API accepts requests from. Update once you know the real
 # Pages URL (or a custom domain) — see src/index.ts.
 [vars]
-APP_ORIGIN = "https://idea-analyzer.pages.dev"
+APP_ORIGIN = "https://raznesi.pages.dev"
 
 # Created with: wrangler d1 create idea-analyzer
 # Paste the database_id it prints below.
