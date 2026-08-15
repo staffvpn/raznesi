@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, AlertCircle } from 'lucide-react';
 import { TopBar } from '@/components/TopBar';
 import { ModePicker } from '@/components/ModePicker';
 import { Button } from '@/components/ui/Button';
@@ -22,6 +22,7 @@ export function Home() {
   const mode = useAnalysisStore((s) => s.mode);
   const setMode = useAnalysisStore((s) => s.setMode);
   const status = useAnalysisStore((s) => s.status);
+  const errorCode = useAnalysisStore((s) => s.errorCode);
   const analyze = useAnalysisStore((s) => s.analyze);
 
   const entitlement = useEntitlementStore((s) => s.entitlement);
@@ -99,6 +100,16 @@ export function Home() {
 
         <div className="mt-6 space-y-3">
           <EntitlementPill />
+          {status === 'error' && (
+            <div className="flex items-start gap-2 rounded-2xl bg-danger-soft text-danger px-3.5 py-3 text-[13px] leading-snug">
+              <AlertCircle size={16} className="shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold">Не получилось разобрать идею</p>
+                <p className="text-danger/80 mt-0.5">Проверьте интернет и попробуйте ещё раз.</p>
+                {errorCode && <p className="text-danger/60 text-[11px] mt-1 break-all">{errorCode}</p>}
+              </div>
+            </div>
+          )}
           <Button fullWidth size="lg" disabled={!canSubmit} onClick={handleSubmit}>
             <Sparkles size={18} />
             {meta.verb}
