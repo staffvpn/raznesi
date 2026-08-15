@@ -1,4 +1,4 @@
-name = "idea-analyzer-api"
+name = "raznesi"
 main = "src/index.ts"
 compatibility_date = "2026-01-01"
 compatibility_flags = ["nodejs_compat"]
@@ -13,7 +13,7 @@ APP_ORIGIN = "https://raznesi.pages.dev"
 [[d1_databases]]
 binding = "DB"
 database_name = "idea-analyzer"
-database_id = "REPLACE_ME"
+database_id = "0c3ff69d-13bc-446c-b454-9fa05781930c"
 
 # Secrets (never put these here — set with `wrangler secret put <NAME>`):
 #   BOT_TOKEN          — the Telegram bot token from @BotFather
